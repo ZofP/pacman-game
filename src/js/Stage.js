@@ -24,8 +24,6 @@ class Stage {
   this.createEntity(2, 5, "wall")
   this.createEntity(1, 3, "bomb")
 
-  const detected = this.collisionDetection(2, 4)
-  console.log(detected)
 
   return this.element
  }
@@ -34,6 +32,18 @@ class Stage {
   const entity = new Entity(x, y, type);
   entity.mount(this.element)
   this.entities.push(entity);
+ }
+
+ removeEntity(entity) {
+  console.log("before", this.entities);
+  entity.unmount(this.element)
+  const index = this.entities.indexOf(ent => ent === entity)
+
+
+  this.entities.splice(index, 1)
+
+  console.log("after", this.entities);
+
  }
 
  update() {
@@ -48,6 +58,7 @@ class Stage {
 
  collisionDetection(x, y) {
   const entityFound = this.entities.find(entity => x === entity.x && y === entity.y);
+  // console.log("collision", this.entities);
   return entityFound
  }
 

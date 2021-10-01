@@ -10,3 +10,4 @@ const pac = new Pacman(0, "open", stage)
 const stageDiv = stage.mount(container)
 pac.mount(stageDiv)
 
+// stage.removeEntity(pac)

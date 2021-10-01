@@ -20,6 +20,14 @@ class Entity {
   return this.element
  }
 
+ unmount(container) {
+  if (this.element) {
+   container.removeChild(this.element);
+   this.element = null;
+  }
+
+ }
+
  update() {
 
  }

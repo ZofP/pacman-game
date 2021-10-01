@@ -74,6 +74,15 @@ class Pacman {
   return true;
  }
 
+ canEatApple() {
+  const entity = this.stage.collisionDetection(this.xpos, this.ypos);
+  if (entity && entity.type === 'apple') {
+   return entity
+  }
+
+
+ }
+
  handleMove(direction) {
   if (direction === 'ArrowRight') {
    if (this.canMoveRight()) {
@@ -98,100 +107,25 @@ class Pacman {
     this.ypos++;
    }
    this.facing = "up"
-   // }
 
   }
-
-  // else if (this.facing === "left") {
-  //  if (direction === 'ArrowRight' && this.xpos < this.widthTiles - 1) {
-  //   this.bgPositionY += this.TILE_SIZE;
-  //   this.xpos++;
-  //   this.facing = "right"
-
-  //  }
-  //  else if (direction === 'ArrowLeft' && this.xpos > 0) {
-  //   this.xpos--;
-  //  }
-  //  else if (direction === 'ArrowDown' && this.ypos > 0) {
-
-  //   this.bgPositionY -= this.TILE_SIZE;
-  //   this.ypos--;
-  //   this.facing = "down"
-
-  //  }
-  //  else if (direction === 'ArrowUp' && this.ypos < this.heightTiles - 1) {
-
-  //   this.bgPositionY -= this.TILE_SIZE * 2;
-  //   this.ypos++;
-  //   this.facing = "up"
-  //  }
-
-
-  // }
-  // else if (this.facing === "down") {
-  //  if (direction === 'ArrowRight' && this.xpos < this.widthTiles - 1) {
-  //   this.bgPositionY += this.TILE_SIZE * 2;
-  //   this.xpos++;
-  //   this.facing = "right"
-  //  }
-  //  else if (direction === 'ArrowLeft' && this.xpos > 0) {
-  //   this.bgPositionY += this.TILE_SIZE;
-  //   this.xpos--;
-  //   this.facing = "left"
-  //  }
-  //  else if (direction === 'ArrowDown' && this.ypos > 0) {
-
-  //   this.ypos--
-  //  }
-  //  else if (direction === 'ArrowUp' && this.ypos < this.heightTiles - 1) {
-
-  //   this.bgPositionY -= this.TILE_SIZE;
-  //   this.ypos++;
-  //   this.facing = "up"
-  //  }
-
-
-  // }
-  // else if (this.facing === "up") {
-  //  if (direction === 'ArrowRight' && this.xpos < this.widthTiles - 1) {
-  //   this.bgPositionY += this.TILE_SIZE * 3;
-  //   this.xpos++;
-  //   this.facing = "right"
-  //  }
-  //  else if (direction === 'ArrowLeft' && this.xpos > 0) {
-  //   this.bgPositionY += this.TILE_SIZE * 2;
-  //   this.xpos--;
-  //   this.facing = "left"
-  //  }
-  //  else if (direction === 'ArrowDown' && this.ypos > 0) {
-  //   this.bgPositionY += this.TILE_SIZE;
-  //   this.ypos--;
-  //   this.facing = "down"
-  //  }
-  //  else if (direction === 'ArrowUp' && this.ypos < this.heightTiles - 1) {
-
-  //   this.ypos++;
-  //  }
-
-
-  // }
-
-
-
   this.mouth = this.mouth === "open" ? "closed" : "open";
 
  }
 
  update() {
+  const apple = this.canEatApple()
+
+  if (apple) {
+   stage.removeEntity(apple)
+  }
 
   const row = this.facing === "right" ? 0 :
    this.facing === "left" ? 1 :
     this.facing === "down" ? 2 :
      this.facing === "up" ? 3 : ""
-  console.log(row);
 
   this.bgPositionY = -row * this.TILE_SIZE
-  console.log(this.bgPositionY);
 
   this.element.style.backgroundPositionX = `${this.bgPositionX}px`;
   this.element.style.backgroundPositionY = `${this.bgPositionY}px`;
