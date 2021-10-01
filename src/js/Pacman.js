@@ -13,6 +13,7 @@ class Pacman {
   this.stage = stage;
   this.widthTiles = stage.widthTiles;
   this.heightTiles = stage.heightTiles;
+  this.score = 0;
 
  }
 
@@ -82,42 +83,66 @@ class Pacman {
 
 
  }
+ steppedOnBomb() {
+  const entity = this.stage.collisionDetection(this.xpos, this.ypos);
+  if (entity && entity.type === 'bomb') {
+   return entity
+  }
+
+
+ }
 
  handleMove(direction) {
-  if (direction === 'ArrowRight') {
-   if (this.canMoveRight()) {
-    this.xpos++;
+  if (this.result !== 0) {
+
+   if (direction === 'ArrowRight') {
+    if (this.canMoveRight()) {
+     this.xpos++;
+    }
+    this.facing = 'right';
    }
-   this.facing = 'right';
-  }
-  else if (direction === 'ArrowLeft') {
-   if (this.canMoveLeft()) {
-    this.xpos--;
+   else if (direction === 'ArrowLeft') {
+    if (this.canMoveLeft()) {
+     this.xpos--;
+    }
+    this.facing = "left"
    }
-   this.facing = "left"
-  }
-  else if (direction === 'ArrowDown') {
-   if (this.canMoveDown()) {
-    this.ypos--;
+   else if (direction === 'ArrowDown') {
+    if (this.canMoveDown()) {
+     this.ypos--;
+    }
+    this.facing = "down"
    }
-   this.facing = "down"
-  }
-  else if (direction === 'ArrowUp') {
-   if (this.canMoveUp()) {
-    this.ypos++;
+   else if (direction === 'ArrowUp') {
+    if (this.canMoveUp()) {
+     this.ypos++;
+    }
+    this.facing = "up"
+
    }
-   this.facing = "up"
+   this.mouth = this.mouth === "open" ? "closed" : "open";
 
   }
-  this.mouth = this.mouth === "open" ? "closed" : "open";
-
  }
 
  update() {
   const apple = this.canEatApple()
+  const bomb = this.steppedOnBomb()
 
   if (apple) {
-   stage.removeEntity(apple)
+   stage.removeEntity(apple);
+   this.score++;
+  }
+  else if (bomb) {
+
+   this.result = Math.floor(Math.random() * 2);
+   if (this.result === 0) {
+    this.element.className = "entity entity--tomb"
+   }
+   else if (this.result === 1) {
+
+   }
+
   }
 
   const row = this.facing === "right" ? 0 :

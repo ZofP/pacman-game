@@ -19,10 +19,25 @@ class Stage {
   this.update();
   container.appendChild(this.element)
 
-  this.createEntity(5, 5, "apple")
+  this.createEntity(5, 3, "apple")
+  this.createEntity(8, 5, "apple")
+  this.createEntity(10, 5, "apple")
   this.createEntity(2, 4, "wall")
+  this.createEntity(3, 5, "wall")
+  this.createEntity(6, 4, "wall")
+  this.createEntity(6, 3, "wall")
   this.createEntity(2, 5, "wall")
+  this.createEntity(3, 5, "wall")
+  this.createEntity(4, 5, "wall")
+  this.createEntity(5, 5, "wall")
+  this.createEntity(8, 4, "wall")
+  this.createEntity(11, 4, "wall")
+  this.createEntity(10, 4, "wall")
+  this.createEntity(9, 4, "wall")
   this.createEntity(1, 3, "bomb")
+  this.createEntity(1, 3, "bomb")
+  this.createEntity(1, 4, "bomb")
+  this.createEntity(2, 3, "bomb")
 
 
   return this.element
@@ -37,10 +52,8 @@ class Stage {
  removeEntity(entity) {
   console.log("before", this.entities);
   entity.unmount(this.element)
-  const index = this.entities.indexOf(ent => ent === entity)
-
-
-  this.entities.splice(index, 1)
+  console.log(entity)
+  this.entities = this.entities.filter((element) => !(element.x === entity.x && element.y === entity.y))
 
   console.log("after", this.entities);
 
