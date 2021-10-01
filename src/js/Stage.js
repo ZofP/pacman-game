@@ -4,6 +4,8 @@ class Stage {
   this.widthTiles = widthTiles;
   this.heightTiles = heightTiles;
   this.TILE_SIZE = 85;
+  this.entities = [];
+
  }
 
  render() {
@@ -13,11 +15,25 @@ class Stage {
  }
 
  mount(container) {
-  console.log(container);
   this.render();
   this.update();
   container.appendChild(this.element)
+
+  this.createEntity(5, 5, "apple")
+  this.createEntity(2, 4, "wall")
+  this.createEntity(2, 5, "wall")
+  this.createEntity(1, 3, "bomb")
+
+  const detected = this.collisionDetection(2, 4)
+  console.log(detected)
+
   return this.element
+ }
+
+ createEntity(x, y, type) {
+  const entity = new Entity(x, y, type);
+  entity.mount(this.element)
+  this.entities.push(entity);
  }
 
  update() {
@@ -30,10 +46,9 @@ class Stage {
   return div.firstChild;
  }
 
- getStageSize() {
-  const stageSize = { width: this.widthTiles, height: this.heightTiles }
-  console.log(stageSize);
-  return stageSize
+ collisionDetection(x, y) {
+  const entityFound = this.entities.find(entity => x === entity.x && y === entity.y);
+  return entityFound
  }
 
 }
