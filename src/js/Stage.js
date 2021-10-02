@@ -35,7 +35,6 @@ class Stage {
   this.createEntity(10, 4, "wall")
   this.createEntity(9, 4, "wall")
   this.createEntity(1, 3, "bomb")
-  this.createEntity(1, 3, "bomb")
   this.createEntity(1, 4, "bomb")
   this.createEntity(2, 3, "bomb")
 
@@ -50,12 +49,9 @@ class Stage {
  }
 
  removeEntity(entity) {
-  console.log("before", this.entities);
   entity.unmount(this.element)
-  console.log(entity)
   this.entities = this.entities.filter((element) => !(element.x === entity.x && element.y === entity.y))
 
-  console.log("after", this.entities);
 
  }
 
@@ -71,7 +67,6 @@ class Stage {
 
  collisionDetection(x, y) {
   const entityFound = this.entities.find(entity => x === entity.x && y === entity.y);
-  // console.log("collision", this.entities);
   return entityFound
  }
 
