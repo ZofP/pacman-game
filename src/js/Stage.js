@@ -1,11 +1,11 @@
 class Stage {
 
- constructor(widthTiles, heightTiles) {
+ constructor(widthTiles, heightTiles, data) {
   this.widthTiles = widthTiles;
   this.heightTiles = heightTiles;
   this.TILE_SIZE = 85;
   this.entities = [];
-
+  this.data = { apples: data.apples.map(item => ({ ...item, type: "apple" })), walls: data.walls.map(item => ({ ...item, type: "wall" })), bombs: data.bombs.map(item => ({ ...item, type: "bomb" })) }
  }
 
  render() {
@@ -19,40 +19,46 @@ class Stage {
   this.update();
   container.appendChild(this.element)
 
-  this.createEntity(5, 3, "apple")
-  this.createEntity(8, 5, "apple")
-  this.createEntity(10, 5, "apple")
-  this.createEntity(2, 4, "wall")
-  this.createEntity(3, 5, "wall")
-  this.createEntity(6, 4, "wall")
-  this.createEntity(6, 3, "wall")
-  this.createEntity(2, 5, "wall")
-  this.createEntity(3, 5, "wall")
-  this.createEntity(4, 5, "wall")
-  this.createEntity(5, 5, "wall")
-  this.createEntity(8, 4, "wall")
-  this.createEntity(11, 4, "wall")
-  this.createEntity(10, 4, "wall")
-  this.createEntity(9, 4, "wall")
-  this.createEntity(1, 3, "bomb")
-  this.createEntity(1, 4, "bomb")
-  this.createEntity(2, 3, "bomb")
+  Object.keys(this.data).forEach((key) => {
+   console.log(this.data[key]);
+   this.data[key].forEach(item => {
+    console.log(item)
+    this.createEntity(item)
+   })
+  })
+  // this.createEntity(5, 3, "apple")
+  // this.createEntity(8, 5, "apple")
+  // this.createEntity(10, 5, "apple")
+  // this.createEntity(2, 4, "wall")
+  // this.createEntity(3, 5, "wall")
+  // this.createEntity(6, 4, "wall")
+  // this.createEntity(6, 3, "wall")
+  // this.createEntity(2, 5, "wall")
+  // this.createEntity(3, 5, "wall")
+  // this.createEntity(4, 5, "wall")
+  // this.createEntity(5, 5, "wall")
+  // this.createEntity(8, 4, "wall")
+  // this.createEntity(11, 4, "wall")
+  // this.createEntity(10, 4, "wall")
+  // this.createEntity(9, 4, "wall")
+  // this.createEntity(1, 3, "bomb")
+  // this.createEntity(1, 4, "bomb")
+  // this.createEntity(2, 3, "bomb")
 
 
   return this.element
  }
 
- createEntity(x, y, type) {
-  const entity = new Entity(x, y, type);
+ createEntity({ x, y, type }) {
+  const entity = new Entity({ x, y, type });
   entity.mount(this.element)
   this.entities.push(entity);
+  console.log(this.entities)
  }
 
  removeEntity(entity) {
   entity.unmount(this.element)
   this.entities = this.entities.filter((element) => !(element.x === entity.x && element.y === entity.y))
-
-
  }
 
  update() {

@@ -14,8 +14,8 @@ class Pacman {
       this.widthTiles = stage.widthTiles;
       this.heightTiles = stage.heightTiles;
       this.score = 0;
-      this.resultArray = ["tomb", "medium"];
-      this.result = 0
+      this.resultArray = ["medium", "tomb", "dark"];
+      this.result = "light"
 
    }
 
@@ -131,21 +131,26 @@ class Pacman {
       const apple = this.canEatApple()
       const bomb = this.steppedOnBomb()
 
+      const score = document.querySelector(".score")
+
       if (apple) {
-         stage.removeEntity(apple);
+         this.stage.removeEntity(apple);
          this.score++;
+
       }
       else if (bomb) {
 
-         const randomIndex = Math.floor(Math.random() * 2);
+         const randomIndex = this.result === "light" ? Math.floor(Math.random() * 2) : this.result === "medium" || this.result === "dark" ? Math.floor(Math.random() * 2 + 1) : 0;
          this.result = this.resultArray[randomIndex];
+         console.log(randomIndex);
          if (this.result === "tomb") {
             this.element.className = "entity entity--tomb"
          }
-         else if (this.result === "medium") {
-            this.element.className = "entity entity--pac pacboy-active-medium"
+         else if (this.result === "medium" || this.result === "dark") {
+            this.element.className = `entity entity--pac pacboy-active-${this.result}`
          }
-         stage.removeEntity(bomb);
+
+         this.stage.removeEntity(bomb);
 
       }
 
@@ -156,6 +161,7 @@ class Pacman {
 
       this.bgPositionY = -row * this.TILE_SIZE
 
+      score.textContent = this.score
       this.element.style.backgroundPositionX = `${this.bgPositionX}px`;
       this.element.style.backgroundPositionY = `${this.bgPositionY}px`;
       this.element.style.left = `${this.xpos * this.TILE_SIZE}px`
