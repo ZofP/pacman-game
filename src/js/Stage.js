@@ -20,30 +20,10 @@ class Stage {
   container.appendChild(this.element)
 
   Object.keys(this.data).forEach((key) => {
-   console.log(this.data[key]);
    this.data[key].forEach(item => {
-    console.log(item)
     this.createEntity(item)
    })
   })
-  // this.createEntity(5, 3, "apple")
-  // this.createEntity(8, 5, "apple")
-  // this.createEntity(10, 5, "apple")
-  // this.createEntity(2, 4, "wall")
-  // this.createEntity(3, 5, "wall")
-  // this.createEntity(6, 4, "wall")
-  // this.createEntity(6, 3, "wall")
-  // this.createEntity(2, 5, "wall")
-  // this.createEntity(3, 5, "wall")
-  // this.createEntity(4, 5, "wall")
-  // this.createEntity(5, 5, "wall")
-  // this.createEntity(8, 4, "wall")
-  // this.createEntity(11, 4, "wall")
-  // this.createEntity(10, 4, "wall")
-  // this.createEntity(9, 4, "wall")
-  // this.createEntity(1, 3, "bomb")
-  // this.createEntity(1, 4, "bomb")
-  // this.createEntity(2, 3, "bomb")
 
 
   return this.element
@@ -53,7 +33,6 @@ class Stage {
   const entity = new Entity({ x, y, type });
   entity.mount(this.element)
   this.entities.push(entity);
-  console.log(this.entities)
  }
 
  removeEntity(entity) {

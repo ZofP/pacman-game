@@ -8,7 +8,7 @@ class Pacman {
       this.mouth = mouth;
       this.bgPositionX = 0;
       this.bgPositionY = 0;
-      this.facing = "right";
+      this.facing = 'ArrowRight';
       this.TILE_SIZE = 85;
       this.stage = stage;
       this.widthTiles = stage.widthTiles;
@@ -16,12 +16,11 @@ class Pacman {
       this.score = 0;
       this.resultArray = ["medium", "tomb", "dark"];
       this.result = "light"
-
+      this.numberApples = this.stage.data.apples.length
    }
 
 
    render() {
-      // this.container = this.elementFromHTML(`<div class="stage"></div>`)
       this.element = this.elementFromHTML(`<div class="entity entity--pac pacboy-active-light"></div>`);
       document.addEventListener('keydown', (event) => {
          this.move(event.code)
@@ -29,7 +28,6 @@ class Pacman {
    }
 
    mount(container) {
-
       this.render();
       this.update();
       container.appendChild(this.element)
@@ -38,14 +36,22 @@ class Pacman {
 
 
    move(direction) {
+      if (this.result !== "tomb" && this.score < this.numberApples) {
+         this.changeMouth()
+         this.handleMove(direction);
+      }
+      this.update();
+   }
+
+
+   changeMouth() {
       if (this.mouth === "open") {
          this.bgPositionX += this.TILE_SIZE
       }
       else if (this.mouth === "closed") {
          this.bgPositionX -= this.TILE_SIZE
       }
-      this.handleMove(direction);
-      this.update();
+      this.mouth = this.mouth === "open" ? "closed" : "open";
    }
 
    canMoveRight() {
@@ -77,91 +83,90 @@ class Pacman {
       return true;
    }
 
-   canEatApple() {
+
+   steppedOnEntity(entityType) {
       const entity = this.stage.collisionDetection(this.xpos, this.ypos);
-      if (entity && entity.type === 'apple') {
+      if (entity && entity.type === entityType) {
          return entity
       }
-
-
-   }
-   steppedOnBomb() {
-      const entity = this.stage.collisionDetection(this.xpos, this.ypos);
-      if (entity && entity.type === 'bomb') {
-         return entity
-      }
-
-
    }
 
    handleMove(direction) {
-      if (this.result !== "tomb") {
+      if (direction === 'ArrowRight') {
+         if (this.canMoveRight()) {
+            this.xpos++;
+         }
+      }
+      else if (direction === 'ArrowLeft') {
+         if (this.canMoveLeft()) {
+            this.xpos--;
+         }
+      }
+      else if (direction === 'ArrowDown') {
+         if (this.canMoveDown()) {
+            this.ypos--;
+         }
+      }
+      else if (direction === 'ArrowUp') {
+         if (this.canMoveUp()) {
+            this.ypos++;
+         }
+      }
+      this.facing = direction;
+   }
 
-         if (direction === 'ArrowRight') {
-            if (this.canMoveRight()) {
-               this.xpos++;
-            }
-            this.facing = 'right';
-         }
-         else if (direction === 'ArrowLeft') {
-            if (this.canMoveLeft()) {
-               this.xpos--;
-            }
-            this.facing = "left"
-         }
-         else if (direction === 'ArrowDown') {
-            if (this.canMoveDown()) {
-               this.ypos--;
-            }
-            this.facing = "down"
-         }
-         else if (direction === 'ArrowUp') {
-            if (this.canMoveUp()) {
-               this.ypos++;
-            }
-            this.facing = "up"
+   updateStatus() {
+      const score = document.querySelector(".score")
 
-         }
-         this.mouth = this.mouth === "open" ? "closed" : "open";
+      this.status = this.score === this.numberApples ? "winner" : this.result === "tomb" ? "loser" : "playing"
 
+
+      if (this.status === "winner" || this.status === "loser") {
+         const body = document.querySelector("body")
+         const bodyBg = this.status === "winner" ? "rgba(0, 255, 0, 0.5)" : this.status === "loser" ? "rgba(255, 0, 0, 0.5)" : "";
+         const heading = document.querySelector(".heading")
+         const headingText = this.status === "winner" ? "YOU WON" : this.status === "loser" ? "YOU LOST" : "";
+
+         const btn = document.querySelector(".btn")
+         heading.textContent = headingText;
+         body.style.background = bodyBg
+         btn.style.display = "block"
+      }
+      else if (this.score < this.numberApples) {
+         score.textContent = this.score
       }
    }
 
-   update() {
-      const apple = this.canEatApple()
-      const bomb = this.steppedOnBomb()
 
-      const score = document.querySelector(".score")
+   update() {
+      const apple = this.steppedOnEntity("apple")
+      const bomb = this.steppedOnEntity("bomb")
 
       if (apple) {
          this.stage.removeEntity(apple);
          this.score++;
-
       }
       else if (bomb) {
-
          const randomIndex = this.result === "light" ? Math.floor(Math.random() * 2) : this.result === "medium" || this.result === "dark" ? Math.floor(Math.random() * 2 + 1) : 0;
          this.result = this.resultArray[randomIndex];
-         console.log(randomIndex);
          if (this.result === "tomb") {
             this.element.className = "entity entity--tomb"
          }
          else if (this.result === "medium" || this.result === "dark") {
             this.element.className = `entity entity--pac pacboy-active-${this.result}`
          }
-
          this.stage.removeEntity(bomb);
-
       }
 
-      const row = this.facing === "right" ? 0 :
-         this.facing === "left" ? 1 :
-            this.facing === "down" ? 2 :
-               this.facing === "up" ? 3 : ""
+      const row = this.facing === "ArrowRight" ? 0 :
+         this.facing === "ArrowLeft" ? 1 :
+            this.facing === "ArrowDown" ? 2 :
+               this.facing === "ArrowUp" ? 3 : ""
 
       this.bgPositionY = -row * this.TILE_SIZE
 
-      score.textContent = this.score
+      this.updateStatus();
+
       this.element.style.backgroundPositionX = `${this.bgPositionX}px`;
       this.element.style.backgroundPositionY = `${this.bgPositionY}px`;
       this.element.style.left = `${this.xpos * this.TILE_SIZE}px`
@@ -173,7 +178,6 @@ class Pacman {
       div.innerHTML = html.trim();
       return div.firstChild;
    }
-
 
 }
 
